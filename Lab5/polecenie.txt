@@ -1,0 +1,2 @@
+Zaimplementuj algorytm rozwiązujący problem chińskiego listonosza. 
+Do poszczególnych etapów algorytmu dozwolone jest użycie wbudowanych funkcji.
