@@ -103,16 +103,21 @@ class Graph:
             print("\n")
 
         elif len(self.getOddEdges()) > 2:
-            
-            oddEdges = self.getOddEdges()
             H = nx.Graph()
-            
-            # for i in oddEdges:
-            #     H.add_node(i)
-            # for i in range(len(oddEdges)):
-            #     for j in range(len(oddEdges)):
-            #         if i != j:
-            #             H.add_edge()
+            oddEdges = self.getOddEdges()
+
+            for i in oddEdges:
+                H.add_node(i)
+
+            for i in range(len(oddEdges)):
+                for j in range(len(oddEdges)):
+                    if i != j:
+                        shortestOdd = nx.bellman_ford_path(self.graph, oddEdges[i], oddEdges[j])
+                        weightSum = 0
+                        for k in range(len(shortestOdd) - 1):
+                            weightSum += self.graph[shortestOdd[k]][shortestOdd[k+1]]["weight"]
+                        H.add_edge(oddEdges[i],oddEdges[j],weight=weightSum)
+            self.graph = H
 
         
         else:
@@ -158,47 +163,50 @@ class Graph:
         plt.tight_layout()
         plt.show()
 
-def main():
-    gr = Graph(10)
-    gr.add_edge(0, 1, 2)
-    gr.add_edge(1, 2, 2)
-    gr.add_edge(1, 8, 2)
-    gr.add_edge(2, 3, 3)
-    gr.add_edge(3, 4, 4)
-    gr.add_edge(3, 8, 3)
-    gr.add_edge(3, 9, 1)
-    gr.add_edge(4, 5, 3)
-    gr.add_edge(4, 9, 2)
-    gr.add_edge(5, 6, 5)
-    gr.add_edge(5, 9, 2)
-    gr.add_edge(6, 7, 1)
-    gr.add_edge(6, 8, 2)
-    gr.add_edge(6, 9, 4)
-    gr.add_edge(7, 0, 1)
-    gr.add_edge(7, 8, 4)
-    print(gr.getOddEdges())
 
-    gr.print_matrix()
-
-
-
+# #PRZYPADEK 3
 # def main():
-#     gr = Graph(6)
-#     gr.add_edge(0, 1, 3)
-#     gr.add_edge(1, 2, 5)
-#     gr.add_edge(1, 5, 8)
-
-#     # gr.add_edge(1, 4, 9)
-    
-#     gr.add_edge(2, 3, 5)
-#     gr.add_edge(2, 4, 10)
-#     gr.add_edge(2, 5, 14)
-#     gr.add_edge(3, 4, 9)
-#     gr.add_edge(4, 5, 6)
-#     gr.add_edge(5, 0, 4)
+#     gr = Graph(10)
+#     gr.add_edge(0, 1, 2)
+#     gr.add_edge(1, 2, 2)
+#     gr.add_edge(1, 8, 2)
+#     gr.add_edge(2, 3, 3)
+#     gr.add_edge(3, 4, 4)
+#     gr.add_edge(3, 8, 3)
+#     gr.add_edge(3, 9, 1)
+#     gr.add_edge(4, 5, 3)
+#     gr.add_edge(4, 9, 2)
+#     gr.add_edge(5, 6, 5)
+#     gr.add_edge(5, 9, 2)
+#     gr.add_edge(6, 7, 1)
+#     gr.add_edge(6, 8, 2)
+#     gr.add_edge(6, 9, 4)
+#     gr.add_edge(7, 0, 1)
+#     gr.add_edge(7, 8, 4)
 #     print(gr.getOddEdges())
 
 #     gr.print_matrix()
+
+
+#PRZYPADEK 2
+def main():
+    gr = Graph(6)
+    gr.add_edge(0, 1, 3)
+    gr.add_edge(1, 2, 5)
+    gr.add_edge(1, 5, 8)
+    
+    #PRZYPADEK 1
+    # gr.add_edge(1, 4, 9)
+    
+    gr.add_edge(2, 3, 5)
+    gr.add_edge(2, 4, 10)
+    gr.add_edge(2, 5, 14)
+    gr.add_edge(3, 4, 9)
+    gr.add_edge(4, 5, 6)
+    gr.add_edge(5, 0, 4)
+    print(gr.getOddEdges())
+
+    gr.print_matrix()
 
 
 if __name__ == '__main__':
