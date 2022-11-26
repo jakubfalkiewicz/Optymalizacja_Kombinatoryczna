@@ -119,21 +119,20 @@ class Graph:
                             weightSum += self.graph[shortestOdd[k]][shortestOdd[k+1]]["weight"]
                         H.add_edge(oddEdges[i],oddEdges[j],weight=weightSum)
             
-            # self.graph = H
-
             minWeightMatch = list(nx.min_weight_matching(H))
             for i in minWeightMatch:
                 shortestOdd = nx.bellman_ford_path(self.graph, i[0], i[1])
-                print(shortestOdd)
+                for i in range(len(shortestOdd) - 1):
+                    #KRAWĘDŹ DO DODANIA
+                    weightE = self.graph[shortestOdd[i]][shortestOdd[i+1]]["weight"]
+                    self.graph.add_edge(shortestOdd[i],shortestOdd[i+1], weight = weightE)
+                # print(shortestOdd)
+                
+            # self.graph = H
 
-            print(list(nx.min_weight_matching(H)))
-
-        
         else:
             print("Podany graf nie jest spójny")
             
-
-        
 
         start = -1
         index = " "
