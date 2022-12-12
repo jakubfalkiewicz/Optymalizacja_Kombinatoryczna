@@ -49,7 +49,6 @@ class Graph:
       print("Otrzymane drzewo spinające T = (V,E'):")
       print(f"V= {list(set(sum(edgesList,[])))} oraz E'= {edgesList}")
 
-
     def getOddEdges(self):
         nodes = []
         for j in range(len(self.adjMatrix)):
@@ -63,11 +62,14 @@ class Graph:
       
     # Print the matrix
     def print_matrix(self):
-        
-        #GRAF EULEROWSKI:
+        if not nx.is_connected(self.graph):
+            print("Podany graf nie jest spójny")
+            return
+        # 1.GRAF EULEROWSKI:
         # Spójny multigraf G jest eulerowski wtedy i tylko wtedy, gdy stopień każdego z wierzchołków jest liczbą parzystą.
-        if nx.is_eulerian(self.graph):
+        elif nx.is_eulerian(self.graph):
             eulerPath = list(nx.eulerian_circuit(self.graph, source=None, keys=False))
+            # print(eulerPath)
             first = True
             for i in eulerPath:
                 if first == True:
@@ -78,14 +80,15 @@ class Graph:
             print("\n")
         # NAJKRÓTSZA DROGA LISTONOSZA: 0 -> 5 -> 4 -> 2 -> 5 -> 1 -> 4 -> 3 -> 2 -> 1 -> 0 
 
-        #GRAF PÓŁEULEROWSKI:
+        # 2.GRAF PÓŁEULEROWSKI:
         # Spójny multigraf G jest półeulerowski wtedy i tylko wtedy, gdy posiada co najwyżej dwa wierzchołki nieparzystego stopnia,
         # z czego jeden z nich jest początkiem łańcucha Eulera, a drugi jego końcem.
         elif nx.is_semieulerian(self.graph):
-            # DROGA EULERA:
+            # ŚCIEŻKA EULERA:
             eulerPath = list(nx.eulerian_path(self.graph))
             # NAJKRÓTSZA DROGA MIĘDZY NIEPARZYSTYMI WIERZCHOŁKAMI
             shortestOdd = nx.bellman_ford_path(self.graph, eulerPath[-1][-1], eulerPath[0][0])
+            # print(list(shortestOdd))
             first = True
             for i in eulerPath:
                 if first == True:
@@ -98,34 +101,43 @@ class Graph:
                 if first2 == True:
                     first2 = False
                 else: 
-                    print(f" -> {i}", end=" ")
-            
+                    print(f"-> {i}", end=" ")
             print("\n")
+        # NAJKRÓTSZA DROGA LISTONOSZA: 1 -> 0 -> 5 -> 1 -> 2 -> 3 -> 4 -> 2 -> 5 -> 4  -> 5  -> 0  -> 1 
 
+        # 3.GRAF Z CO NAJMNIEJ 3 WIERZCHOLKAMI NIEPARZYSTYMI:
         elif len(self.getOddEdges()) > 2:
-            #OBCIĄŻONY GRAF G'
+            # 2. OBCIĄŻONY GRAF G'
             H = nx.Graph()
+            # 1. Wierzchołki nieparzystego stopnia
             oddEdges = self.getOddEdges()
 
             for i in oddEdges:
                 H.add_node(i)
+            
 
             for i in range(len(oddEdges)):
                 for j in range(len(oddEdges)):
                     if i != j:
                         shortestOdd = nx.bellman_ford_path(self.graph, oddEdges[i], oddEdges[j])
+                        # print(shortestOdd)
                         weightSum = 0
                         for k in range(len(shortestOdd) - 1):
+                            # sumuje wagi krawędzi oryginalnego grafu
                             weightSum += self.graph[shortestOdd[k]][shortestOdd[k+1]]["weight"]
+                        #dodaje krawędź do nowego grafu H o wadze równej sumie wag krawędzi
                         H.add_edge(oddEdges[i],oddEdges[j],weight=weightSum)
             
+            # Minimalne skojarzenie dokładne
             minWeightMatch = list(nx.min_weight_matching(H))
+            print(minWeightMatch)
             for i in minWeightMatch:
                 shortestOdd = nx.bellman_ford_path(self.graph, i[0], i[1])
-                for i in range(len(shortestOdd) - 1):
+                for j in range(len(shortestOdd) - 1):
                     #KRAWĘDŹ DO DODANIA
-                    weightE = self.graph[shortestOdd[i]][shortestOdd[i+1]]["weight"]
-                    self.graph.add_edge(shortestOdd[i],shortestOdd[i+1], weight = weightE)
+                    weightE = self.graph[shortestOdd[j]][shortestOdd[j+1]]["weight"]
+                    # dodanie krawędzi do grafu G
+                    self.graph.add_edge(shortestOdd[j],shortestOdd[j+1], weight = weightE)
                 # print(shortestOdd)
                 
             # self.graph = H
