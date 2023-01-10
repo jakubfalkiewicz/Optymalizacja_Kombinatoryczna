@@ -1,0 +1,7 @@
+Zaimplementuj algorytm CPM dla wybranej przez siebie postaci sieci, tzn. dla sieci typu AN lub AA.
+użytkownik podaje zadania/sieć AA lub AN.
+program sprawdza, czy podany digraf jest acykliczny.
+program dla każdego zadania wylicza najwcześniejszy i najpóźniejszy moment rozpoczęcia zadania.
+program wypisuje zadania na ścieżce krytycznej (Uwaga: nie wystarczy sprawdzić warunek, że najwcześniejszy i najpóźniejszy moment starty są takie same).
+przedstawić uszeregowanie zadań (harmonogram Gantta).
+Mile widziana wizualizacja grafu podanego przez użytkownika.
